@@ -9,10 +9,20 @@ app.get("/", (req, res) => {
   res.send("Buissness Server is runnign!");
 });
 
-app.get("/users", async (req, res) => {
-  const { data, error } = await supabase.from("users").select("*");
+// get user by email id
+app.get("/users/:email", async (req, res) => {
+  const email = req.params.email;
+  console.log("email", email);
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("email", email);
+  console.log("data", data);
   res.json(data);
 });
+
+
+
 
 app.get("/role/:email", async (req, res) => {
   // const { role } = req.body;
@@ -76,38 +86,6 @@ app.get("/profiles", async (req, res) => {
 app.post("/profiles", async (req, res) => {
   const { data, error } = await supabase.from("profiles");
 });
-
-// app.get("/users", async (req, res) => {
-//   const users = await db.table("users").select("*");
-//   res.json(users);
-// });
-
-// app.post("/users", async (req, res) => {
-//   const newUser = await db.table("users").insert({
-//     name: req.body.name,
-//     email: req.body.email,
-//   });
-//   res.json(newUser);
-// });
-
-// app.put("/users/:id", async (req, res) => {
-//   const updatedUser = await db
-//     .table("users")
-//     .update({
-//       name: req.body.name,
-//       email: req.body.email,
-//     })
-//     .where({ id: req.params.id });
-//   res.json(updatedUser);
-// });
-
-// app.delete("/users/:id", async (req, res) => {
-//   const deletedUser = await db
-//     .table("users")
-//     .delete()
-//     .where({ id: req.params.id });
-//   res.json(deletedUser);
-// });
 
 app.listen(port, () => {
   console.log(`Buissness Server is runnign listening on port ${port}`);
