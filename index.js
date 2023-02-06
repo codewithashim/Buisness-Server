@@ -12,29 +12,35 @@ app.get("/", (req, res) => {
 // get user by email id
 app.get("/users/:email", async (req, res) => {
   const email = req.params.email;
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("email", email);
+  res.json(data);
+});
+
+// make advrtiser account
+
+app.get("/users/advertiser/:email", async (req, res) => {
+  const email = req.params.email;
   console.log("email", email);
   const { data, error } = await supabase
     .from("users")
     .select("*")
     .eq("email", email);
-  console.log("data", data);
-  res.json(data);
+  res.json({ isAdvertiser: data[0]?.role === "advertiser" });
 });
 
+// make admin account
 
-
-
-app.get("/role/:email", async (req, res) => {
-  // const { role } = req.body;
-  const email = req.param.email;
+app.get("/users/admin/:email", async (req, res) => {
+  const email = req.params.email;
   console.log("email", email);
-  const response = await supabase.from("users").where({ email }).returning("*");
-  res.json(response);
-});
-
-app.get("/users/role", async (req, res) => {
-  const { data, error } = await supabase.from("users").select("role");
-  res.json(data);
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("email", email);
+  res.json({ isAdmin: data[0]?.role === "admin" });
 });
 
 app.get("/about-us", async (req, res) => {
@@ -72,7 +78,67 @@ app.get("/faqs", async (req, res) => {
 });
 
 app.get("/list-business", async (req, res) => {
-  const { data, error } = await supabase.from("list_business").select("*");
+  const { data, error } = await supabase.from("list-business").select("*");
+  res.json(data);
+});
+
+// filter business by businessName
+
+app.get("/list-business/:businessName", async (req, res) => {
+  const businessName = req.params.businessName;
+  console.log("name", businessName);
+  const { data, error } = await supabase
+    .from("list-business")
+    .select("*")
+    .eq("businessName", businessName);
+  res.json(data);
+});
+
+// filter business by businessAddress
+
+app.get("/list-business/:businessAddress", async (req, res) => {
+  const businessAddress = req.params.businessAddress;
+  console.log("name", businessAddress);
+  const { data, error } = await supabase
+    .from("list-business")
+    .select("*")
+    .eq("businessAddress", businessAddress);
+  res.json(data);
+});
+
+// seraach business by name and location form list business
+
+// app.get("/list-business/:name/:location", async (req, res) => {
+//   const name = req.params.businessName;
+//   const location = req.params.businessAddress;
+//   const { data, error } = await supabase
+//     .from("list-business")
+//     .select("*")
+//     .eq("businessName", name)
+//     .eq("businessAddress", location);
+//   res.json(data);
+// });
+
+// filter business by businessName
+
+// get all business categories
+
+app.get("/business-categories", async (req, res) => {
+  const { data, error } = await supabase
+    .from("business-categories")
+    .select("*");
+  res.json(data);
+});
+
+// filter business categories by category name
+
+app.get("/business-categories/:title", async (req, res) => {
+  const title = req.params.title;
+  console.log("name", title);
+  const { data, error } = await supabase
+    .from("business-categories")
+    .select("*")
+    .eq("title", title);
   res.json(data);
 });
 
